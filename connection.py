@@ -3,6 +3,37 @@ import configparser as ConfigParser
 from os import path
 
 
+class Conf:
+    SHOST :str
+    SUSER :str
+    SPASSWORD :str
+    SPORT :str
+    SDATABASE:str
+    SDRIVER :str
+    STABLE :str
+    SCOLUMN :str
+    SPKEY:str
+    HAS_OBS :str
+    SOBS :str
+    SFILTER :str 
+    HAS_FILTER:str
+    S_SYNC_TAB:str
+    LIMIT :str
+    DEBUG :str
+    SLEEP :str
+    HAS_ARABIC:str
+    SERVPORT :str
+    S_SYNC_TABLE:str
+    DHOST :str
+    DDATABASE:str
+    DUSER :str
+    DPASSWORD :str
+    DPORT :str
+    DDRIVER :str
+    DTABLE :str
+    
+  
+
 # CREATE CONN FILE IF NOT EXISTS
 
 def client_creation(fname):
@@ -97,36 +128,36 @@ def conn(fname):
     client_creation(fname)
     appConfig = ConfigParser.ConfigParser()
     appConfig.read(fname)
+    conf= Conf
+    conf.SHOST = appConfig.get("SourceConnectionString", "host")
+    conf.SUSER = appConfig.get("SourceConnectionString", "user")
+    conf.SPASSWORD = appConfig.get("SourceConnectionString", "password")
+    conf.SPORT = appConfig.get("SourceConnectionString", "port")
+    conf.SDATABASE = appConfig.get("SourceConnectionString", "db")
+    conf.SDRIVER = appConfig.get("SourceConnectionString", "driver")
+    conf.STABLE = appConfig.get("SourceConnectionString", "table")
+    conf.SCOLUMN = appConfig.get("SourceConnectionString", "columns")
+    conf.SPKEY = appConfig.get("SourceConnectionString", "pk")
+    conf.HAS_OBS = appConfig.get("SourceConnectionString", "has_observers")
+    conf.SOBS = appConfig.get("SourceConnectionString", "observers")
+    conf.SFILTER = appConfig.get("SourceConnectionString", "filters")
+    conf.HAS_FILTER = appConfig.get("SourceConnectionString", "has_filters")
+    conf.S_SYNC_TABLE = appConfig.get("SourceConnectionString", "sync_table")
+    conf.LIMIT = appConfig.get("SourceConnectionString", "limit")
+    conf.DEBUG = appConfig.get("SourceConnectionString", "debug")
+    conf.SLEEP = appConfig.get("SourceConnectionString", "sleep(s)")
+    conf.HAS_ARABIC = appConfig.get("SourceConnectionString", "PK_HAS_ARABIC")
+    conf.SERVPORT = appConfig.get("SourceConnectionString", "serverport")
 
-    SHOST = appConfig.get("SourceConnectionString", "host")
-    SUSER = appConfig.get("SourceConnectionString", "user")
-    SPASSWORD = appConfig.get("SourceConnectionString", "password")
-    SPORT = appConfig.get("SourceConnectionString", "port")
-    SDATABASE = appConfig.get("SourceConnectionString", "db")
-    SDRIVER = appConfig.get("SourceConnectionString", "driver")
-    STABLE = appConfig.get("SourceConnectionString", "table")
-    SCOLUMN = appConfig.get("SourceConnectionString", "columns")
-    SPKEY = appConfig.get("SourceConnectionString", "pk")
-    HAS_OBS = appConfig.get("SourceConnectionString", "has_observers")
-    SOBS = appConfig.get("SourceConnectionString", "observers")
-    SFILTER = appConfig.get("SourceConnectionString", "filters")
-    HAS_FILTER = appConfig.get("SourceConnectionString", "has_filters")
-    S_SYNC_TABLE = appConfig.get("SourceConnectionString", "sync_table")
-    LIMIT = appConfig.get("SourceConnectionString", "limit")
-    DEBUG = appConfig.get("SourceConnectionString", "debug")
-    SLEEP = appConfig.get("SourceConnectionString", "sleep(s)")
-    HAS_ARABIC = appConfig.get("SourceConnectionString", "PK_HAS_ARABIC")
-    SERVPORT = appConfig.get("SourceConnectionString", "serverport")
+    conf.DHOST = appConfig.get("DestConnectionString", "host")
+    conf.DDATABASE = appConfig.get("DestConnectionString", "db")
+    conf.DUSER = appConfig.get("DestConnectionString", "user")
+    conf.DPASSWORD = appConfig.get("DestConnectionString", "password")
+    conf.DPORT = appConfig.get("DestConnectionString", "port")
+    conf.DDRIVER = appConfig.get("DestConnectionString", "driver")
+    conf.DTABLE = appConfig.get("DestConnectionString", "table")
 
-    DHOST = appConfig.get("DestConnectionString", "host")
-    DDATABASE = appConfig.get("DestConnectionString", "db")
-    DUSER = appConfig.get("DestConnectionString", "user")
-    DPASSWORD = appConfig.get("DestConnectionString", "password")
-    DPORT = appConfig.get("DestConnectionString", "port")
-    DDRIVER = appConfig.get("DestConnectionString", "driver")
-    DTABLE = appConfig.get("DestConnectionString", "table")
-
-    return[SHOST,SUSER,SPASSWORD,SDATABASE,SDRIVER,SPORT,STABLE,SCOLUMN,SPKEY,SOBS,SFILTER,S_SYNC_TABLE,DHOST,DDATABASE,DUSER,DPASSWORD,DPORT,DDRIVER,DTABLE,HAS_FILTER,HAS_OBS,LIMIT,DEBUG,SLEEP,HAS_ARABIC,SERVPORT]
+    return conf
 
 
 def serv_conn(fname):

@@ -6,6 +6,7 @@ from configparser import ParsingError
 import pyodbc
 import cx_Oracle
 from connection import serv_conn
+from updater_client import Msg
 # import time
 # import numpy as np
 # import io 
@@ -32,30 +33,30 @@ def handle_client(s_conn,addr):
         if comp:
             decomp= zlib.decompress(comp)
             if decomp:
-                msg = pickle.loads(decomp)
+                msg:Msg = pickle.loads(decomp)
                 if msg:
-                    sqlst= msg[0]
+                    sqlst= msg.Sqlst
                     shost= "localhost"
-                    sport=msg[2]
-                    suser=msg[3]
-                    spass=msg[4]
-                    sdrive=msg[5]
-                    pkey=msg[6]
-                    spkey=msg[6].split (",")
+                    sport=msg.SPORT
+                    suser=msg.SUSER
+                    spass=msg.SPASSWORD
+                    sdrive=msg.SDRIVER
+                    pkey=msg.PKEY
+                    spkey=msg.PKEY.split (",")
                     n_pkey = len(spkey)
-                    s=msg[7]
-                    sdatabase=msg[8]
-                    limit =  msg[9]
-                    done = msg[10]
-                    sync=msg[11]
-                    col=msg[12]
+                    s=msg.S
+                    sdatabase=msg.SDATABASE
+                    limit =  msg.LIMIT
+                    done = msg.DONE
+                    sync=msg.S_SYNC_TABLE
+                    col=msg.COL
                     # ,HAS_OBST,OBS
-                    has_obs = msg[13]
-                    obs=msg[14]
-                    sobs=msg[14].split (",")
-                    scol = msg[15]
-                    arabic = msg[16]
-                    debug_= msg[17]
+                    has_obs = msg.HAS_OBST
+                    obs=msg.OBS
+                    sobs=msg.OBS.split (",")
+                    scol = msg.SCOLUMN
+                    arabic = msg.HAS_ARABIC
+                    debug_= msg.DEBUG_
                     nobs=len(sobs)
                     if Er == True :
                         if s=="SQL":
@@ -209,7 +210,7 @@ def handle_client(s_conn,addr):
 
 def start():
     server.listen()
-    print("Updater Server v3.14")
+    print("Updater Server v3.2")
     print(f"LISTENING SERVER is listening on PORT {SERVER} : {PORT}")
     while True:
         s_conn,addr = server.accept()

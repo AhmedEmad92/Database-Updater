@@ -8,69 +8,109 @@ import time
 import pickle
 import zlib
 
-print("Database Updater V3.13")      
+print("Database Updater V3.2")    
+
+class Msg :
+    # Sqlst:str
+    # SHOST:str
+    # SPORT:str 
+    # SUSER:str 
+    # SPASSWORD:str
+    # SDRIVER:str
+    # PKEY:str
+    # S:str
+    # SDATABASE:str
+    # LIMIT:int
+    # DONE : str
+    # S_SYNC_TABLE:str
+    # COL:list[str]
+    # HAS_OBST:str
+    # OBS:str
+    # SCOLUMN:str
+    # HAS_ARABIC:str
+    # DEBUG_:int
+    def __init__(msg,Sqlst,SHOST,SPORT,SUSER,SPASSWORD,SDRIVER,PKEY,S,SDATABASE,LIMIT,DONE,S_SYNC_TABLE,COL,HAS_OBST,OBS,SCOLUMN,HAS_ARABIC,DEBUG_):
+         msg.Sqlst=Sqlst
+         msg.SHOST=SHOST
+         msg.SPORT=SPORT
+         msg.SUSER=SUSER
+         msg.SPASSWORD=SPASSWORD
+         msg.SDRIVER=SDRIVER
+         msg.PKEY=PKEY
+         msg.S=S
+         msg.SDATABASE=SDATABASE
+         msg.LIMIT=LIMIT
+         msg.DONE=DONE
+         msg.S_SYNC_TABLE=S_SYNC_TABLE
+         msg.COL=COL
+         msg.HAS_OBST=HAS_OBST
+         msg.OBS=OBS
+         msg.SCOLUMN=SCOLUMN
+         msg.HAS_ARABIC=HAS_ARABIC
+         msg.DEBUG_=DEBUG_
+
 # import sal  
 # def send():
 # def updater_conn() :
 conf = conn("copy.config")
-# [SHOST,SUSER,SPASSWORD,SDATABASE,SDRIVER,
-#  SPORT,STABLE,SCOLUMN,SPKEY,SOBS,SFILTER,
-#  S_SYNC_TABLE,DHOST,DDATABASE,DUSER,
-#  DPASSWORD,DPORT,DDRIVER,DTABLE,HAS_FILTER,
-#  HAS_OBS,LIMIT,DEBUG,SLEEP,DELETE_O]
-SHOST = conf[0]
-SHOST2 = conf[0]
-SUSER = conf[1]
-SPASSWORD = conf[2]
-SDATABASE = conf[3]
-if conf[4].capitalize() =='S' :
+# SHOST,SUSER,SPASSWORD,SDATABASE,SDRIVER,SPORT,
+# STABLE,SCOLUMN,SPKEY,SOBS,SFILTER,
+# S_SYNC_TABLE,DHOST,DDATABASE,DUSER,DPASSWORD,
+# DPORT,DDRIVER,DTABLE,HAS_FILTER,HAS_OBS,
+# LIMIT,DEBUG,SLEEP,HAS_ARABIC,SERVPORT
+SHOST = conf.SHOST
+SHOST2 = conf.SHOST
+SUSER = conf.SUSER
+SPASSWORD = conf.SPASSWORD
+SDATABASE = conf.SDATABASE
+if conf.SDRIVER.capitalize() =='S' :
     SDRIVER = 'SQL Server Native Client 11.0'
     COMMIT_DRIVER = 'SQL Server'
     S ="SQL"
-    SHOST = str(SHOST) + ","+str(conf[5])
-elif conf[4].capitalize() =='O':
+    SHOST = str(SHOST) + ","+str(conf.SPORT)
+elif conf.SDRIVER.capitalize() =='O':
     SDRIVER = 'ORACLE'
     S = "ORACLE"
-SPORT = conf[5]
-STABLE=conf[6]
-SCOLUMN=conf[7]
-COL = conf[7].split(",")
-SPKEY= conf[8].split (",")
-PKEY= conf[8]
-SOBS=conf[9].split (",")
-OBS = conf[9]
-if conf[19].capitalize() =='Y' :
-    SFILTER=conf[10]
-elif conf[19].capitalize() =='N' :
+SPORT = conf.SPORT
+STABLE=conf.STABLE
+SCOLUMN=conf.SCOLUMN
+COL = conf.SCOLUMN.split(",")
+SPKEY= conf.SPKEY.split (",")
+PKEY= conf.SPKEY
+SOBS=conf.SOBS.split (",")
+OBS = conf.SOBS
+if conf.HAS_FILTER.capitalize() =='Y' :
+    SFILTER=conf.SFILTER
+elif conf.HAS_FILTER.capitalize() =='N' :
     SFILTER="1=1"
 else:
     raise Exception("ERROR IN has_filter")
 
-S_SYNC_TABLE=conf[11]
+S_SYNC_TABLE=conf.S_SYNC_TABLE
 
-DHOST=conf[12]
-DDATABASE=conf[13]
-DUSER=conf[14]
-DPASSWORD=conf[15]
-DPORT=conf[16]
-SCONN = conf[4].capitalize()
-DCONN = conf[17].capitalize()
-if conf[17].capitalize() =='S' :
+DHOST=conf.DHOST
+DDATABASE=conf.DDATABASE
+DUSER=conf.DUSER
+DPASSWORD=conf.DPASSWORD
+DPORT=conf.DPORT
+SCONN = conf.SDRIVER.capitalize()
+DCONN = conf.DDRIVER.capitalize()
+if conf.DDRIVER.capitalize() =='S' :
     DDRIVER = 'SQL Server Native Client 11.0'
     D = "SQL"
     DHOST = str(DHOST) + ","+str(DPORT)
-elif conf[17].capitalize() =='O':
+elif conf.DDRIVER.capitalize() =='O':
     DDRIVER = 'ORACLE'
     D = "ORACLE"
-DTABLE=conf[18]
-HAS_OBST = conf[20].capitalize()
-LIMIT = int(conf[21])
-DEBUG_ = int(conf[22])
+DTABLE=conf.DTABLE
+HAS_OBST = conf.HAS_OBS.capitalize()
+LIMIT = int(conf.LIMIT)
+DEBUG_ = int(conf.DEBUG)
 N_PKEY = len(SPKEY)
 N_OBS = len(SOBS)
-SLEEP_ = int(conf[23])
-HAS_ARABIC = conf[24].capitalize()
-SERVPORT = int(conf[25])
+SLEEP_ = int(conf.SLEEP)
+HAS_ARABIC = conf.HAS_ARABIC.capitalize()
+SERVPORT = int(conf.SERVPORT)
 
 print("starting connection with "+ str(SHOST2) + " on port " + str(SERVPORT))
 
@@ -194,7 +234,8 @@ def updater():
                                 sqlst=sqlst+ ")"
             if DEBUG_ ==1:
                 print (sqlst)
-            row=send([sqlst,SHOST,SPORT,SUSER,SPASSWORD,SDRIVER,PKEY,S,SDATABASE,LIMIT,"1",S_SYNC_TABLE,COL,HAS_OBST,OBS,SCOLUMN,HAS_ARABIC,DEBUG_])
+            msg= Msg(sqlst,SHOST,SPORT,SUSER,SPASSWORD,SDRIVER,PKEY,S,SDATABASE,LIMIT,"1",S_SYNC_TABLE,COL,HAS_OBST,OBS,SCOLUMN,HAS_ARABIC,DEBUG_)
+            row=send(msg)
             # decoder = zlib.decompressobj(16 + zlib.MAX_WBITS)
             # content = decoder.decompress(row.raw.read())
             # print(row)
@@ -234,7 +275,8 @@ def updater():
                                         sqlst=sqlst+ ")"
                     if DEBUG_ ==1 :            
                         print (sqlst)
-                    rows=send([sqlst,SHOST,SPORT,SUSER,SPASSWORD,SDRIVER,PKEY,S,SDATABASE,LIMIT," ",S_SYNC_TABLE,COL,HAS_OBST,OBS,SCOLUMN,HAS_ARABIC,DEBUG_])
+                    msg= Msg(sqlst,SHOST,SPORT,SUSER,SPASSWORD,SDRIVER,PKEY,S,SDATABASE,LIMIT," ",S_SYNC_TABLE,COL,HAS_OBST,OBS,SCOLUMN,HAS_ARABIC,DEBUG_)
+                    rows=send(msg)
                     # cursor = conn.cursor()
                     # cursor.execute(sqlst)
                     no_row_done = limit
@@ -343,8 +385,8 @@ def updater():
                                             sqlst = sqlst +","+OBS+" ) VALUES ("
                                         elif HAS_OBST == "N":
                                             sqlst = sqlst + " ) VALUES "
-                                    
-                                        send([sqlst,SHOST,SPORT,SUSER,SPASSWORD,SDRIVER,PKEY,S,SDATABASE,LIMIT,"done",S_SYNC_TABLE,COL,HAS_OBST,OBS,SCOLUMN,HAS_ARABIC,DEBUG_])
+                                        msg= Msg(sqlst,SHOST,SPORT,SUSER,SPASSWORD,SDRIVER,PKEY,S,SDATABASE,LIMIT,"done",S_SYNC_TABLE,COL,HAS_OBST,OBS,SCOLUMN,HAS_ARABIC,DEBUG_)
+                                        send(msg)
                                         no_row_done=no_row_done+limit
         return 
 
